@@ -1,0 +1,8 @@
+{
+	modules:[
+		{
+		    name:'UIPullRefresh',
+		    class:'com.apicloud.devlop.uzUIPullRefresh.UzUIPullRefresh'
+		}
+	]
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+    <head>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,width=device-width,initial-scale=1.0'/>
+        <title>聊天盒子</title>
+        <link rel='stylesheet' type='text/css' href='../css/bootstrap.min.css' />
+		<link rel='stylesheet' href='../css/github.css'>
+		<style type='text/css'>
+		  .diy-btn-group-test {margin : 10px 0px 0px 0px;}
+		</style>
+		
+    </head>
+    <body>
+    </body>
+	<script src="../script/jquery-1.11.1.min.js"></script>
+	<script src='../script/demo.js'></script>
+	<script src='../script/highlight.pack.js'></script>
+    <script type='text/javascript' src='../script/api.js'></script>
+    <script type='text/javascript'>
+    
+    	function setRefrashHeader(){
+			api.setCustomRefreshHeaderInfo({
+			    bgColor: '#00FF00',
+			    image: {
+			        pull: 'widget://image/refresh/pull_image.png', 
+			        transform: [
+			            'widget://image/refresh/pull_end_image_frame_01.png', 
+			            'widget://image/refresh/pull_end_image_frame_02.png',
+			            'widget://image/refresh/pull_end_image_frame_03.png',
+			            'widget://image/refresh/pull_end_image_frame_04.png',
+			            'widget://image/refresh/pull_end_image_frame_05.png',
+			        ],
+			        load: [ 
+			            'widget://image/refresh/refreshing_image_frame_01.png', 
+			            'widget://image/refresh/refreshing_image_frame_02.png',
+			            'widget://image/refresh/refreshing_image_frame_03.png', 
+			            'widget://image/refresh/refreshing_image_frame_04.png',
+			            'widget://image/refresh/refreshing_image_frame_05.png',
+			            'widget://image/refresh/refreshing_image_frame_06.png', 
+			            'widget://image/refresh/refreshing_image_frame_07.png',
+			            'widget://image/refresh/refreshing_image_frame_08.png',
+			        ]
+			    }
+			}, function( ret, err ){
+			    alert('下拉刷新事件触发了，请开始加载数据刷新页面，然后停止加载状态');
+			});
+		}
+		
+		function toRefrash(){
+			api.refreshHeaderLoading();
+		}
+		
+		function stopRefrash(){
+			api.refreshHeaderLoadDone();
+		}
+
+    </script>
+    
+   <body>
+    <div id="wrap">
+        <div id="main"> 
+            <div  >
+           		<input type="button" onclick="setRefrashHeader()" value="setRefrashHeader" />
+           		<input type="button" onclick="toRefrash()" value="toRefrash" />
+           		<input type="button" onclick="stopRefrash()" value="stopRefrash" />
+           		<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+           		<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+           		<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </div>
+
+        </div>   
+    </div>
+</body>
+    
+</html>
