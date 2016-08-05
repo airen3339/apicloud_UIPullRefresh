@@ -8,6 +8,7 @@ package com.apicloud.devlop.uzUIPullRefresh;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.View;
 import com.uzmap.pkg.uzcore.uzmodule.RefreshHeader;
 import com.uzmap.pkg.uzcore.uzmodule.UZModuleContext;
@@ -75,6 +76,7 @@ public class UzUIPullRefresh extends RefreshHeader {
 	@Override
 	public void onStateChange(int state) {
 		mCusHeadView.onStateChange(state);
+		Log.e("pullRefresh", "onStateChange:" + state);
 	}
 
 }

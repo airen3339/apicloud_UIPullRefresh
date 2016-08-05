@@ -6,15 +6,18 @@
 //
 package com.apicloud.devlop.uzUIPullRefresh;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.uzmap.pkg.uzcore.UZCoreUtil;
+import com.uzmap.pkg.uzcore.UZResourcesIDFinder;
 import com.uzmap.pkg.uzcore.uzmodule.UZModuleContext;
 import com.uzmap.pkg.uzkit.UZUtility;
 
@@ -105,13 +108,27 @@ public class MTCusHeadView extends CusHeadView {
 
 	private void initPullImg() {
 		mPullImg = mJsParamsUtil.pullImg(mModuleContext);
+		if (mPullImg == null) {
+			int drawableId = UZResourcesIDFinder.getResDrawableID("pull_image");
+			mPullImg = BitmapFactory.decodeResource(getResources(), drawableId);
+		}
 		mImageView.setImageBitmap(mPullImg);
 	}
 
 	@SuppressWarnings("deprecation")
 	private void initTransformAnim() {
 		List<Bitmap> imgs = mJsParamsUtil.transformImgs(mModuleContext);
+		if (imgs == null) {
+			imgs = new ArrayList<Bitmap>();
+			for (int i = 1; i <= 5; i++) {
+				int drawableId = UZResourcesIDFinder
+						.getResDrawableID("pull_end_image_frame_0" + i);
+				imgs.add(BitmapFactory.decodeResource(getResources(),
+						drawableId));
+			}
+		}
 		mTransformAnim = new AnimationDrawable();
+		mTransformAnim.setOneShot(true);
 		if (imgs != null) {
 			for (Bitmap img : imgs) {
 				mTransformAnim.addFrame(new BitmapDrawable(img),
@@ -123,6 +140,15 @@ public class MTCusHeadView extends CusHeadView {
 	@SuppressWarnings("deprecation")
 	private void initLoadAnim() {
 		List<Bitmap> imgs = mJsParamsUtil.loadImgs(mModuleContext);
+		if (imgs == null) {
+			imgs = new ArrayList<Bitmap>();
+			for (int i = 1; i <= 8; i++) {
+				int drawableId = UZResourcesIDFinder
+						.getResDrawableID("refreshing_image_frame_0" + i);
+				imgs.add(BitmapFactory.decodeResource(getResources(),
+						drawableId));
+			}
+		}
 		mLoadAnim = new AnimationDrawable();
 		if (imgs != null) {
 			for (Bitmap img : imgs) {
