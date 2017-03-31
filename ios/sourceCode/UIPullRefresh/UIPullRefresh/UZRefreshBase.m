@@ -152,6 +152,7 @@ typedef enum {
     bgView.frame = CGRectMake(0, -boardH, boardW, boardH);
     bgView.backgroundColor = [UZAppUtils colorFromNSString:bgColor];
     [self.scrollView addSubview:bgView];
+    self.scrollView.bounces = YES;
     //添加图片容器
     _pullImageView.image = [UIImage imageWithContentsOfFile:pullImgPath];
     
@@ -204,7 +205,7 @@ typedef enum {
 
 - (void)refreshHeaderLoadDone:(NSDictionary *)paramsDict_ {
     UIEdgeInsets contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
@@ -278,14 +279,23 @@ typedef enum {
         float dist = -offsetY;
         if (dist > changeY) {
             if (self.state != ACPullToRefreshStateLoading) {
-                [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:0.2];
-                UIEdgeInsets contentInset = UIEdgeInsetsMake(changeY, 0, 0, 0);
-                self.scrollView.contentInset = contentInset;
-                [UIView commitAnimations];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [UIView animateWithDuration:0.25 animations:^{
+                        CGFloat top = changeY;
+                        UIEdgeInsets inset = scrollView.contentInset;
+                        inset.top = top;
+                        scrollView.contentInset = inset;
+                    } completion:^(BOOL finished) {
+                        [self sendResultEventWithCallbackId:setCbid dataDict:nil errDict:nil doDelete:NO];
+                    }];
+                });
+
+                //[UIView beginAnimations:nil context:NULL];
+                //[UIView setAnimationDuration:0.3];
+                //scrollView.contentInset = UIEdgeInsetsMake(changeY, 0.0f, 0.0f, 0.0f);
+                //[UIView commitAnimations];
                 self.state = ACPullToRefreshStateLoading;
                 [self showLoad];
-                [self sendResultEventWithCallbackId:setCbid dataDict:nil errDict:nil doDelete:NO];
             }
         }
     }
