@@ -1,6 +1,6 @@
 /**
   * APICloud Modules
-  * Copyright (c) 2014-2015 by APICloud, Inc. All Rights Reserved.
+  * Copyright (c) 2014-2017 by APICloud, Inc. All Rights Reserved.
   * Licensed under the terms of the The MIT License (MIT).
   * Please see the license.html included with this distribution for details.
   */
@@ -29,6 +29,7 @@ typedef enum {
 
 @property (nonatomic, strong) UIImageView *transImageView, *pullImageView, *loadImageView;
 @property (nonatomic, readwrite) ACPullToRefreshState state;
+@property (nonatomic, strong) UIView *refreshBgView;
 
 @end
 
@@ -40,9 +41,6 @@ typedef enum {
 #pragma mark - lifeCycle -
 
 - (void)dispose {
-    if (setCbid >= 0) {
-        [self deleteCallback:setCbid];
-    }
     if (_transImageView) {
         [_transImageView removeFromSuperview];
         self.transImageView = nil;
@@ -68,8 +66,6 @@ typedef enum {
         changeY = (5.0/4.0) * imageSize;// * (10.0/9.0);
         
         self.state = ACPullToRefreshStateNormal;
-        
-        setCbid = -1;
     }
     return self;
 }
@@ -77,6 +73,9 @@ typedef enum {
 #pragma mark - interface -
 
 - (void)setCustomRefreshHeaderInfo:(NSDictionary *)paramsDict_ {
+    if (_refreshBgView) {
+        return;
+    }
     NSDictionary *imageInfo = [paramsDict_ dictValueForKey:@"image" defaultValue:@{}];
     if (imageInfo.count == 0) {
         //return;
@@ -142,16 +141,13 @@ typedef enum {
         }
     }
     
-    if (setCbid >= 0) {
-        [self deleteCallback:setCbid];
-    }
     setCbid = [paramsDict_ integerValueForKey:@"cbId" defaultValue:-1];
     //添加背景
     NSString *bgColor = [paramsDict_ stringValueForKey:@"bgColor" defaultValue:@"#C0C0C0"];
-    UIView *bgView = [[UIView alloc]init];
-    bgView.frame = CGRectMake(0, -boardH, boardW, boardH);
-    bgView.backgroundColor = [UZAppUtils colorFromNSString:bgColor];
-    [self.scrollView addSubview:bgView];
+    self.refreshBgView = [[UIView alloc]init];
+    _refreshBgView.frame = CGRectMake(0, -boardH, boardW, boardH);
+    _refreshBgView.backgroundColor = [UZAppUtils colorFromNSString:bgColor];
+    [self.scrollView addSubview:_refreshBgView];
     self.scrollView.bounces = YES;
     //添加图片容器
     _pullImageView.image = [UIImage imageWithContentsOfFile:pullImgPath];
@@ -181,9 +177,9 @@ typedef enum {
     _loadImageView.frame = loadRect;
     
     
-    [bgView addSubview:_transImageView];
-    [bgView addSubview:_pullImageView];
-    [bgView addSubview:_loadImageView];
+    [_refreshBgView addSubview:_transImageView];
+    [_refreshBgView addSubview:_pullImageView];
+    [_refreshBgView addSubview:_loadImageView];
 }
 
 - (void)refreshHeaderLoading:(NSDictionary *)paramsDict_ {
